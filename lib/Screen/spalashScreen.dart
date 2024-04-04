@@ -1,3 +1,4 @@
+import 'package:drawmoneyadmin/Screen/home_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,8 +11,16 @@ class SpalashLogo extends StatefulWidget {
 }
 
 class _SpalashLogoState extends State<SpalashLogo> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    sessionmanage();
+  }
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
 
       body:  Container(
@@ -37,16 +46,14 @@ var userId;
       print(userId);
       print(userId.runtimeType);
 
-      if(userId==null) {
-        // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage(),));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeScreen()));
 
-      }
-      else{
-
-        // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Dashboard(),));
-
-
-      }
+      // if(userId==null) {
+      //   // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage(),));
+      // }
+      // else{
+      //   // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Dashboard(),));
+      // }
 
     },);
 
