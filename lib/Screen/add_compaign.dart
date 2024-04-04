@@ -25,7 +25,7 @@ class _Add_CompaignState extends State<AddCompaign> {
   TextEditingController startNumberController  = TextEditingController();
   TextEditingController ticketPriceController  = TextEditingController();
 
-
+// String s1;
   TimeOfDay _openTime = TimeOfDay.now();
   TimeOfDay _closeTime = TimeOfDay.now();
   TimeOfDay _resultTime = TimeOfDay.now();
