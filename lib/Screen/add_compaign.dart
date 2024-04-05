@@ -44,6 +44,8 @@ class _Add_CompaignState extends State<AddCompaign> {
     int openMinutes = openTime.hour * 60 + openTime.minute;
     int closeMinutes = closeTime.hour * 60 + closeTime.minute;
 
+    print('open=${openMinutes}');
+    print('close=${closeMinutes}');
     // If open time is less than close time, return true, otherwise false
     return openMinutes < closeMinutes;
   }
@@ -159,8 +161,11 @@ class _Add_CompaignState extends State<AddCompaign> {
               //return;
             }
            else if(maxCountController.text=='') {
-              Fluttertoast.showToast(msg: 'Enter Max  Count');
+              Fluttertoast.showToast(msg: 'Enter Max Count');
               //return;
+            }
+           else if(int.parse(maxCountController.text.toString()) > int.parse(ticketCountController.text.toString())){
+              Fluttertoast.showToast(msg: 'Enter Correct Max Count');
             }
            else if(prizeNameController.text=='') {
               Fluttertoast.showToast(msg: 'Enter Prize Name');
@@ -170,6 +175,10 @@ class _Add_CompaignState extends State<AddCompaign> {
               Fluttertoast.showToast(msg: 'Enter Start Number');
               //return;
             }
+           else if(int.parse(startNumberController.text.toString()) <= int.parse(ticketCountController.text.toString()))
+          {
+            Fluttertoast.showToast(msg: 'Start number should be greater than ticket count');
+          }
            else if(ticketPriceController.text=='') {
               Fluttertoast.showToast(msg: 'Enter Ticket Price');
               //return;
@@ -184,6 +193,9 @@ class _Add_CompaignState extends State<AddCompaign> {
               Fluttertoast.showToast(msg: "Enter Winner Price");
 
             }
+           else if( int.parse(ticketCountController.text.toString() ) < winningPosition.length){
+              Fluttertoast.showToast(msg: "Your winning positions Should be less than or equal to Ticket Count ");
+           }
            else{
 
               addCampaign();
@@ -204,7 +216,7 @@ class _Add_CompaignState extends State<AddCompaign> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
-            backgroundColor: AppColors.appbar,
+            backgroundColor: AppColors.whit,
             onPressed: (){
             setState(() {
               winningPosition.add(''); // Add a new row with default city 'Indore'
@@ -215,7 +227,7 @@ class _Add_CompaignState extends State<AddCompaign> {
           ) ,
           SizedBox(width: 10,),
           FloatingActionButton(
-            backgroundColor: AppColors.appbar,
+            backgroundColor: AppColors.whit,
             onPressed: (){
             setState(() {
               winningPosition.removeLast(); // Add a new row with default city 'Indore'
@@ -348,7 +360,7 @@ class _Add_CompaignState extends State<AddCompaign> {
                       controller: startDateController,
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(left: 10, top: 15),
-                        hintText: "Enter Start Date",
+                        hintText: "Enter Date",
                         focusedBorder: InputBorder.none,
                         errorBorder: InputBorder.none,
                         enabledBorder: InputBorder.none,
@@ -384,7 +396,7 @@ class _Add_CompaignState extends State<AddCompaign> {
                       controller: endDateController,
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(left: 10, top: 15),
-                        hintText: "Enter End Date",
+                        hintText: "Enter Date",
                         focusedBorder: InputBorder.none,
                         errorBorder: InputBorder.none,
                         enabledBorder: InputBorder.none,
@@ -558,7 +570,7 @@ class _Add_CompaignState extends State<AddCompaign> {
                       controller: resultDateController,
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(left: 10, top: 10),
-                        hintText: "Enter Result Date",
+                        hintText: "Enter Date",
                         focusedBorder: InputBorder.none,
                         errorBorder: InputBorder.none,
                         enabledBorder: InputBorder.none,
