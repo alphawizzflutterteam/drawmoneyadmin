@@ -1,11 +1,16 @@
+import 'dart:convert';
 import 'dart:io';
-
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../Api services/api_services/apiConstants.dart';
+import '../Api services/api_services/apiStrings.dart';
 import '../Helper/Colors.dart';
+import 'compaign_management.dart';
 class AddCompaign extends StatefulWidget {
   const AddCompaign({Key? key}) : super(key: key);
 
@@ -32,6 +37,16 @@ class _Add_CompaignState extends State<AddCompaign> {
 
   List<String> winningPosition = ['']; // List to store selected dropdown values for each row
   List<String> winnerPrice = ['']; //
+
+
+  bool isOpen(TimeOfDay openTime, TimeOfDay closeTime) {
+    // Convert TimeOfDay to minutes for easier comparison
+    int openMinutes = openTime.hour * 60 + openTime.minute;
+    int closeMinutes = closeTime.hour * 60 + closeTime.minute;
+
+    // If open time is less than close time, return true, otherwise false
+    return openMinutes < closeMinutes;
+  }
 
   //String _selectedTimeString ='${DateTime.now().hour}:${DateTime.now().minute.toString().padLeft(2, '0')}';
   Future<void> _selectTime(BuildContext context,int i) async {
@@ -75,6 +90,37 @@ class _Add_CompaignState extends State<AddCompaign> {
       });
     }
   }
+  
+  Future<void> _selectDate1(
+      BuildContext context, TextEditingController controller) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.parse(startDateController.text),
+      firstDate:DateTime.parse(startDateController.text),
+      lastDate: DateTime.now().add(Duration(days: 60))
+    );
+
+    if (picked != null && picked != controller.text) {
+      setState(() {
+        controller.text = picked.toLocal().toString().split(' ')[0];
+      });
+    }
+  }
+  Future<void> _selectDate2(
+      BuildContext context, TextEditingController controller) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.parse(endDateController.text),
+      firstDate:  DateTime.parse(endDateController.text),
+      lastDate: DateTime.now().add(Duration(days: 60))
+    );
+
+    if (picked != null && picked != controller.text) {
+      setState(() {
+        controller.text = picked.toLocal().toString().split(' ')[0];
+      });
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,9 +144,15 @@ class _Add_CompaignState extends State<AddCompaign> {
               Fluttertoast.showToast(msg: 'Enter End Date');
               //return;
             }
+           else if(!isOpen(_openTime,_closeTime)){
+             Fluttertoast.showToast(msg: 'Please Select Correct Close Time ');
+            }
            else if(resultDateController.text=='') {
               Fluttertoast.showToast(msg: 'Enter Result Date');
               //return;
+            }
+            else if(!isOpen(_closeTime,_resultTime)){
+              Fluttertoast.showToast(msg: 'Please Select Correct Result Time ');
             }
            else if(ticketCountController.text=='') {
               Fluttertoast.showToast(msg: 'Enter Ticket Count');
@@ -132,6 +184,10 @@ class _Add_CompaignState extends State<AddCompaign> {
               Fluttertoast.showToast(msg: "Enter Winner Price");
 
             }
+           else{
+
+              addCampaign();
+            }
           },
           child: Container(
             height: 40,
@@ -143,7 +199,7 @@ class _Add_CompaignState extends State<AddCompaign> {
           ),
         ),
       ),
-      backgroundColor: AppColors.greyColor,
+      backgroundColor: AppColors.textFieldClr,
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -226,7 +282,7 @@ class _Add_CompaignState extends State<AddCompaign> {
                             InkWell(
                               child: Container(
                                 padding: EdgeInsets.all(16),
-                                child: Text("Upload Pdf"),
+                                child: Text("Gallery"),
                               ),
                               onTap: () {
                                 // Navigator.of(context).pop(); // Close the AlertDialog
@@ -236,7 +292,7 @@ class _Add_CompaignState extends State<AddCompaign> {
                             InkWell(
                               child: Container(
                                 padding: EdgeInsets.all(16),
-                                child: Text("Upload Image"),
+                                child: Text("Camera"),
                               ),
                               onTap: () {
                                 //  Navigator.of(context).pop(); // Close the AlertDialog
@@ -317,7 +373,13 @@ class _Add_CompaignState extends State<AddCompaign> {
                     ),
                     child: TextFormField(
                       onTap: () {
-                        _selectDate(context, endDateController);
+                        if(startDateController.text=='')
+                        {
+                          Fluttertoast.showToast(msg: 'Please Select Start Date');
+                        }
+                        else{
+                          _selectDate1(context, endDateController);
+                        }
                       },
                       controller: endDateController,
                       decoration: InputDecoration(
@@ -328,7 +390,14 @@ class _Add_CompaignState extends State<AddCompaign> {
                         enabledBorder: InputBorder.none,
                         suffixIcon: GestureDetector(
                           onTap: () {
-                            _selectDate(context, endDateController);
+                            if(startDateController.text=='')
+                            {
+                              Fluttertoast.showToast(msg: 'Please Select Start Date');
+                            }
+                            else{
+                              _selectDate1(context, endDateController);
+                            }
+
                           },
                           child: Icon(Icons.calendar_today,color: AppColors.appbar,),
                         ),
@@ -469,7 +538,7 @@ class _Add_CompaignState extends State<AddCompaign> {
                 children: [
                   Container(
                     width: MediaQuery.sizeOf(context).width/2.3,
-          
+
                     decoration: BoxDecoration(
                       color: AppColors.whit,
                       // border: Border.all(color: colors.black12, width: 2),
@@ -477,7 +546,14 @@ class _Add_CompaignState extends State<AddCompaign> {
                     ),
                     child: TextFormField(
                       onTap: () {
-                        _selectDate(context, resultDateController);
+                        print("bbbbbbbbbbbbbb");
+                        if(endDateController.text=='')
+                        {
+                          Fluttertoast.showToast(msg: 'Please Select End Date');
+                        }
+                        else{
+                          _selectDate2(context, resultDateController);
+                        }
                       },
                       controller: resultDateController,
                       decoration: InputDecoration(
@@ -488,7 +564,14 @@ class _Add_CompaignState extends State<AddCompaign> {
                         enabledBorder: InputBorder.none,
                         suffixIcon: GestureDetector(
                           onTap: () {
-                            _selectDate(context, resultDateController);
+                            print("bbbbbbbbbbbbbb");
+                            if(endDateController.text=='')
+                            {
+                              Fluttertoast.showToast(msg: 'Please Select End Date');
+                            }
+                            else{
+                              _selectDate2(context, resultDateController);
+                            }
                           },
                           child: Icon(Icons.calendar_today,color: AppColors.appbar,),
                         ),
@@ -830,9 +913,9 @@ class _Add_CompaignState extends State<AddCompaign> {
   final picker = ImagePicker();
 
   Future getImageFromGallery() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      _image= File(pickedFile.path);
+    XFile? image= await picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      _image= File(image.path);
 
       setState(() {
         Navigator.pop(context);
@@ -841,12 +924,99 @@ class _Add_CompaignState extends State<AddCompaign> {
   }
 
   Future getImageFromCamera() async {
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
-    if (pickedFile != null) {
-      _image = File(pickedFile.path);
+    XFile? image= await picker.pickImage(source: ImageSource.camera);
+    if (image != null) {
+      _image = File(image.path);
       setState(() {
        Navigator.pop(context);
       });
     }
+  }
+
+ Future<void> addCampaign() async {
+
+   var headers = {
+     'Cookie': 'ci_session=15b63e83479f0b815ac032d66e353bf5e7052074'
+   };
+   var param = {
+   'game_id':'',
+   'game_name':compaignNameController.text,
+   'date':startDateController.text,
+   'end_date':endDateController.text,
+   'close_time':'${_closeTime.hour}:${_closeTime.minute.toString().padLeft(2, '0')}',
+   'open_time':'${_openTime.hour}:${_openTime.minute.toString().padLeft(2, '0')}',
+   'result_date':resultDateController.text,
+   'result_time':'${_resultTime.hour}:${_resultTime.minute.toString().padLeft(2, '0')}',
+   'ticket_price':ticketPriceController.text,
+   'ticket_count':ticketCountController.text,
+   'ticket_max_count':maxCountController.text,
+   'prize_name':prizeNameController.text,
+   'start_number':startNumberController.text,
+   };
+   List<Map<String, String>> productList = [];
+   for (int i = 0; i < winningPosition.length; i++) {
+     Map<String, String> productData = {
+       'lottery_no[$i]': winningPosition[i].toString(),
+     };
+     productList.add(productData);
+   }
+   // int k = 0;
+   for (int i = 0; i < winnerPrice.length; i++) {
+     Map<String, String> guestData = {
+       'winner_price[$i]': winnerPrice[i].toString(),
+     };
+     productList.add(guestData);
+     // k++;
+   }
+   Map<String,String> data = addMapListToData(param, productList);
+
+
+   var request = http.MultipartRequest('POST',addCampaignApi);
+  // request.fields.addAll({data});
+
+   data.forEach((key, value) {
+     print('${key}:${value}');
+     request.fields[key] = value;
+   });
+
+   request.files.add(await http.MultipartFile.fromPath('file',_image?.path.toString() ?? ""));
+
+print(request.fields);
+print(request.files);
+
+   // final response = await post(Uri.parse(' https://admin.drawmoney.in/Apicontroller/addgame'), body: data.isNotEmpty ? data : [])
+   //     .timeout(const Duration(seconds: timeOut));
+
+   request.headers.addAll(headers);
+
+   http.StreamedResponse response = await request.send();
+
+   if(response.statusCode==200)
+   {
+     var result = await response.stream.bytesToString();
+     var finalResult = jsonDecode(result);
+     Fluttertoast.showToast(msg: "${finalResult['msg']}");
+     if(finalResult['status']=='success')
+       {
+         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>CompaignManagement()));
+       }
+     // var result=jsonDecode(response.body);
+     // Fluttertoast.showToast(msg: "${result['message']}");
+     // if(result['status']==true)
+     //   {
+     //
+     //   }
+      // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeScreen()));
+   }
+
+ }
+  Map<String, String> addMapListToData(
+      Map<String, String> data, List<Map<String, dynamic>> mapList) {
+    for (var map in mapList) {
+      map.forEach((key, value) {
+        data[key] = value;
+      });
+    }
+    return data;
   }
 }

@@ -1,6 +1,9 @@
 import 'apiConstants.dart';
 
 final Uri loginurl = Uri.parse('${baseUrl}login');
+final Uri loginurlNew = Uri.parse('${baseUrl2}loginCheck');
+final Uri campaignListApi = Uri.parse('${baseUrl2}campaignList');
+final Uri addCampaignApi = Uri.parse('${baseUrl2}addgame');
 final Uri getprivecyurl = Uri.parse('${baseUrl}get_settings');
 final Uri getget_faqsurl = Uri.parse('${baseUrl}get_faqs');
 final Uri getCompleateDeliverurl = Uri.parse('${baseUrl}complete_deliveries');

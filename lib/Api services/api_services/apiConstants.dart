@@ -52,6 +52,6 @@ const String bankDetail =
 // for demo panels
 const String baseUrl = 'https://developmentalphawizz.com/pick_drop/delivery_boy/app/v1/api/';
 const String imageUrl = 'https://magma.developmentalphawizz.com/';
-
+const String baseUrl2='https://admin.drawmoney.in/Apicontroller/';
 //const String ecomExpressUrl = 'https://clbeta.ecomexpress.in/track_me/api/mawbd/';
 //const String jwtKey = 'https://alphawizzserver.com/';
