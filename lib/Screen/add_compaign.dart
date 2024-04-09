@@ -63,13 +63,13 @@ class _Add_CompaignState extends State<AddCompaign> {
         _openTime = picked;
       });
     }
-    else if (picked != null && picked != _openTime && i==2) {
+    else if (picked != null && picked != _closeTime && i==2) {
       setState(() {
        // _selectedTimeString = '${picked.hour}:${picked.minute.toString().padLeft(2, '0')}';
         _closeTime = picked;
       });
     }
-    else if (picked != null && picked != _openTime && i==3) {
+    else if (picked != null && picked != _resultTime && i==3) {
       setState(() {
        // _selectedTimeString = '${picked.hour}:${picked.minute.toString().padLeft(2, '0')}';
         _resultTime = picked;
