@@ -40,7 +40,7 @@ class _Add_CompaignState extends State<AddCompaign> {
 
 
   bool isOpen(TimeOfDay openTime, TimeOfDay closeTime) {
-    // Convert TimeOfDay to minutes for easier comparison
+
     int openMinutes = openTime.hour * 60 + openTime.minute;
     int closeMinutes = closeTime.hour * 60 + closeTime.minute;
 
