@@ -64,20 +64,15 @@ class _CompaignManagementState extends State<CompaignManagement> {
               borderRadius: BorderRadius.circular(10), color: AppColors.appbar),
           child: Center(
             child: Text(
-              'Add Compaign+',
+              'Add Campaign+',
               style: TextStyle(color: AppColors.whit),
             ),
           ),
         ),
       ),
       body: campaignListModel == null
-          ? Center(
-              child: Text(
-                'No Data Found!!',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            )
-          : ListView.builder(
+          ? Center(child: CircularProgressIndicator())
+          : campaignListModel?.data?.length == 0 ? Text("No data Found!!"):ListView.builder(
               itemCount: campaignListModel?.data?.length,
               itemBuilder: (context, index) {
                 return Padding(

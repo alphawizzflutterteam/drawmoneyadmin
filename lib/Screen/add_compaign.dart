@@ -175,9 +175,9 @@ class _Add_CompaignState extends State<AddCompaign> {
               Fluttertoast.showToast(msg: 'Enter Start Number');
               //return;
             }
-           else if(int.parse(startNumberController.text.toString()) <= int.parse(ticketCountController.text.toString()))
+           else if(int.parse(startNumberController.text.toString()) > 6)
           {
-            Fluttertoast.showToast(msg: 'Start number should be greater than ticket count');
+            Fluttertoast.showToast(msg: 'Start number should be less than 7');
           }
            else if(ticketPriceController.text=='') {
               Fluttertoast.showToast(msg: 'Enter Ticket Price');
@@ -946,7 +946,6 @@ class _Add_CompaignState extends State<AddCompaign> {
   }
 
  Future<void> addCampaign() async {
-
    var headers = {
      'Cookie': 'ci_session=15b63e83479f0b815ac032d66e353bf5e7052074'
    };

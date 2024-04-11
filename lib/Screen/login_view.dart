@@ -205,15 +205,18 @@ class _LoginScreenState extends State<LoginScreen> {
                            loginApi();
                          }
                                 },
-                                child: Container(
-                                  height: 30,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: AppColors.buttonColor
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 22,right: 22),
+                                  child: Container(
+                                    height: 30,
+                                  //  width: 100,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: AppColors.buttonColor
 
+                                    ),
+                                    child: Center(child: Text("Login",style: TextStyle(color: AppColors.whit),)),
                                   ),
-                                  child: Center(child: Text("Login",style: TextStyle(color: AppColors.whit),)),
                                 ),
                               )
                               // Padding(
