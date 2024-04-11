@@ -1004,7 +1004,7 @@ class _Add_CompaignState extends State<AddCompaign> {
    // request.files.add(await http.MultipartFile.fromPath('file',_image?.path ?? ""));
 // print("kkk");
 // print(request.fields);
-// print(request.files);
+print(request.files);
 
    // final response = await post(Uri.parse(' https://admin.drawmoney.in/Apicontroller/addgame'), body: data.isNotEmpty ? data : [])
    //     .timeout(const Duration(seconds: timeOut));
