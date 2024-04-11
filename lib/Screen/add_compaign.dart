@@ -175,9 +175,9 @@ class _Add_CompaignState extends State<AddCompaign> {
               Fluttertoast.showToast(msg: 'Enter Start Number');
               //return;
             }
-           else if(int.parse(startNumberController.text.toString()) > 6)
+           else if(int.parse(startNumberController.text.toString()) < 1 || int.parse(startNumberController.text.toString()) > 999999)
           {
-            Fluttertoast.showToast(msg: 'Start number should be less than 7');
+            Fluttertoast.showToast(msg: 'Enter Valid Start Number');
           }
            else if(ticketPriceController.text=='') {
               Fluttertoast.showToast(msg: 'Enter Ticket Price');
@@ -197,8 +197,7 @@ class _Add_CompaignState extends State<AddCompaign> {
               Fluttertoast.showToast(msg: "Your winning positions Should be less than or equal to Ticket Count ");
            }
            else{
-
-              addCampaign();
+             addCampaign();
             }
           },
           child: Container(
@@ -230,8 +229,11 @@ class _Add_CompaignState extends State<AddCompaign> {
             backgroundColor: AppColors.whit,
             onPressed: (){
             setState(() {
-              winningPosition.removeLast(); // Add a new row with default city 'Indore'
-              winnerPrice.removeLast(); // Add a
+              if(winningPosition.length>1)
+                {
+                  winningPosition.removeLast(); // Add a new row with default city 'Indore'
+                  winnerPrice.removeLast(); // Add a
+                }
             });
           },
         child: Icon(Icons.remove,size: 25,color: Colors.black,),
@@ -287,14 +289,20 @@ class _Add_CompaignState extends State<AddCompaign> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('Select Option'),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
+                        title: Text('Select Image'),
+                        content: Row(
+                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             InkWell(
                               child: Container(
-                                padding: EdgeInsets.all(16),
-                                child: Text("Gallery"),
+                                //  padding: EdgeInsets.all(16),
+                                height: 30,
+                                width: 80,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                  color: AppColors.primary
+                                ),
+                                child: Center(child: Text("Gallery",style: TextStyle(color: AppColors.whit),)),
                               ),
                               onTap: () {
                                 // Navigator.of(context).pop(); // Close the AlertDialog
@@ -303,8 +311,11 @@ class _Add_CompaignState extends State<AddCompaign> {
                             ),
                             InkWell(
                               child: Container(
-                                padding: EdgeInsets.all(16),
-                                child: Text("Camera"),
+                                height: 30,
+                                width: 80,
+                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),
+                                    color: AppColors.primary),
+                                child: Center(child: Text("Camera",style: TextStyle(color: AppColors.whit),)),
                               ),
                               onTap: () {
                                 //  Navigator.of(context).pop(); // Close the AlertDialog
@@ -925,7 +936,7 @@ class _Add_CompaignState extends State<AddCompaign> {
   final picker = ImagePicker();
 
   Future getImageFromGallery() async {
-    XFile? image= await picker.pickImage(source: ImageSource.gallery);
+    XFile? image= await picker.pickImage(source: ImageSource.gallery, imageQuality:80, maxHeight:400, maxWidth: 400 );
     if (image != null) {
       _image= File(image.path);
 
@@ -936,7 +947,7 @@ class _Add_CompaignState extends State<AddCompaign> {
   }
 
   Future getImageFromCamera() async {
-    XFile? image= await picker.pickImage(source: ImageSource.camera);
+    XFile? image= await picker.pickImage(source: ImageSource.camera, imageQuality:80, maxHeight:400, maxWidth: 400 );
     if (image != null) {
       _image = File(image.path);
       setState(() {
@@ -990,10 +1001,10 @@ class _Add_CompaignState extends State<AddCompaign> {
      request.fields[key] = value;
    });
 
-   request.files.add(await http.MultipartFile.fromPath('file',_image?.path.toString() ?? ""));
-
-print(request.fields);
-print(request.files);
+   // request.files.add(await http.MultipartFile.fromPath('file',_image?.path ?? ""));
+// print("kkk");
+// print(request.fields);
+// print(request.files);
 
    // final response = await post(Uri.parse(' https://admin.drawmoney.in/Apicontroller/addgame'), body: data.isNotEmpty ? data : [])
    //     .timeout(const Duration(seconds: timeOut));

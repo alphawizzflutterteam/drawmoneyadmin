@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:drawmoneyadmin/Helper/Colors.dart';
 import 'package:drawmoneyadmin/Screen/add_compaign.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
@@ -17,6 +18,36 @@ class CompaignManagement extends StatefulWidget {
 }
 
 class _CompaignManagementState extends State<CompaignManagement> {
+
+  deleteCampaign(String gameId) async {
+    var headers = {
+      'Cookie': 'ci_session=e150bdef082256925412aee6b4fbf38f521fbe90'
+    };
+    var request = http.MultipartRequest('POST', deleteGame);
+    request.fields.addAll({
+      'game_id': gameId
+    });
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      var finalResponse = await response.stream.bytesToString();
+      var finalResult = jsonDecode(finalResponse);
+      Fluttertoast.showToast(msg: finalResult['message']);
+      Navigator.pop(context);
+      getCampaignList();
+      // if(finalResult['status']==true)
+      //   {
+      //     Fluttertoast.showToast(msg: "message");
+      //   }
+    }
+    else {
+    print(response.reasonPhrase);
+    }
+
+  }
   CampainListModel? campaignListModel;
   getCampaignList() async {
     var request = http.Request('GET', campaignListApi);
@@ -26,6 +57,7 @@ class _CompaignManagementState extends State<CompaignManagement> {
       var finalResult = jsonDecode(finalResponse);
       setState(() {
         campaignListModel = CampainListModel.fromJson(finalResult);
+        print('--bb----${campaignListModel?.data[0].gameId}');
       });
     } else {
       print(response.reasonPhrase);
@@ -284,8 +316,58 @@ class _CompaignManagementState extends State<CompaignManagement> {
                                       width: 5,
                                     ),
                                     // Image(image: AssetImage('assets/icons/teamIcon.png')),
+
                                     Text(
                                         'Max Coupon:${campaignListModel!.data[index].ticketMaxCount}'),
+
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    InkWell(
+                                        onTap: (){
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Text('Are you want to delete?'),
+                                                content: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    InkWell(
+                                                      child: Container(
+                                                        //  padding: EdgeInsets.all(16),
+                                                        height: 30,
+                                                        width: 80,
+                                                        decoration: BoxDecoration(
+                                                            borderRadius: BorderRadius.circular(10),
+                                                            color: AppColors.primary
+                                                        ),
+                                                        child: Center(child: Text("Yes",style: TextStyle(color: AppColors.whit),)),
+                                                      ),
+                                                      onTap: () {
+                                                        deleteCampaign(campaignListModel!.data[index].gameId  ?? "");
+                                                        },
+                                                    ),
+                                                    InkWell(
+                                                      child: Container(
+                                                        height: 30,
+                                                        width: 80,
+                                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),
+                                                            color: AppColors.primary),
+                                                        child: Center(child: Text("No",style: TextStyle(color: AppColors.whit),)),
+                                                      ),
+                                                      onTap: () {
+                                                          Navigator.of(context).pop(); // Close the AlertDialog
+                                                      //  getImageFromCamera();
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            },
+                                          );
+                                        },
+                                        child: Icon(Icons.delete,))
                                   ],
                                 ),
                               ],

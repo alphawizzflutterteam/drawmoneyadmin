@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 
 import '../Api services/api_services/apiStrings.dart';
 import '../Model/campaign_list_model.dart';
+import 'completedScreen.dart';
 
 class ResultScreen extends StatefulWidget {
   const ResultScreen({Key? key}) : super(key: key);
@@ -18,15 +19,15 @@ class ResultScreen extends StatefulWidget {
 }
 
 class _ResultScreenState extends State<ResultScreen> {
-  CampainListModel? campaignListModel;
+  // CampainListModel? campaignListModel;
   ResultModel? resultModel;
-  getCampaignList() async {
+  getResults() async {
 
     var headers = {
       'Content-Type': 'application/json',
       'Cookie': 'ci_session=a79ba699fd22a6277212abb4bc7acedff7076007'
     };
-    var request = http.Request('GET', Uri.parse('https://admin.drawmoney.in/Apicontroller/getLotteries'));
+    var request = http.Request('GET',getresult);
     request.body = json.encode({
       "type": 3,
       "user_id": "0"
@@ -63,7 +64,7 @@ class _ResultScreenState extends State<ResultScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getCampaignList();
+    getResults();
   }
 
   @override
@@ -110,9 +111,9 @@ class _ResultScreenState extends State<ResultScreen> {
         itemBuilder: (context, index) {
           return InkWell(
             onTap: (){
-              if(resultModel?.data?.lotteries[index].resultStatus==1)
+              if(resultModel?.data?.lotteries[index].resultStatus=='1')
                 {
-
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>CompletedScreen(lot: resultModel!.data!.lotteries[index])));
                 }
             },
             child: Padding(
@@ -151,121 +152,150 @@ class _ResultScreenState extends State<ResultScreen> {
                     Padding(
                       padding: const EdgeInsets.only(left: 8, right: 8),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius:
-                                      BorderRadius.circular(5),
-                                      color: AppColors.buttonColor),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 6,
-                                        right: 6,
-                                        top: 2,
-                                        bottom: 2),
-                                    child: Text(
-                                      'Start:${resultModel?.data!.lotteries[index].openTime ?? ""}',
-                                      style: const TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  )),
-                              SizedBox(height: 10),
-                              Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius:
-                                      BorderRadius.circular(5),
-                                      color: AppColors.buttonColor),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 6,
-                                        right: 6,
-                                        top: 2,
-                                        bottom: 2),
-                                    child: Text(
-                                      'Start:${DateFormat("dd-MM-yyyy").format(DateTime.parse(resultModel?.data!.lotteries[index].date.toString() ?? ""))}',
-                                      style: const TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  )),
-                            ],
-                          ),
+                          SizedBox(height: 10,),
+                          Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: AppColors.appbar,
+                                gradient: LinearGradient(
+                                  colors: [
+                                    AppColors.buttonColor.withOpacity(.9),
+                                    AppColors.buttonColor.withOpacity(.6),
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 6,
+                                    right: 6,
+                                    top: 2,
+                                    bottom: 2),
+                                child: Text(
+                                  'Complete',
+                                  style: TextStyle(
+                                      color: AppColors.blackTemp,
+                                      fontSize: 12),
+                                ),
+                              )),
+                          SizedBox(height: 10,),
+
+                          // Column(
+                          //   crossAxisAlignment: CrossAxisAlignment.start,
+                          //   children: [
+                          //     Container(
+                          //         decoration: BoxDecoration(
+                          //             borderRadius:
+                          //             BorderRadius.circular(5),
+                          //             color: AppColors.buttonColor),
+                          //         child: Padding(
+                          //           padding: const EdgeInsets.only(
+                          //               left: 6,
+                          //               right: 6,
+                          //               top: 2,
+                          //               bottom: 2),
+                          //           child: Text(
+                          //             'Start:${resultModel?.data!.lotteries[index].openTime ?? ""}',
+                          //             style: const TextStyle(
+                          //                 fontSize: 12,
+                          //                 fontWeight: FontWeight.w500),
+                          //           ),
+                          //         )),
+                          //     SizedBox(height: 10),
+                          //     Container(
+                          //         decoration: BoxDecoration(
+                          //             borderRadius:
+                          //             BorderRadius.circular(5),
+                          //             color: AppColors.buttonColor),
+                          //         child: Padding(
+                          //           padding: const EdgeInsets.only(
+                          //               left: 6,
+                          //               right: 6,
+                          //               top: 2,
+                          //               bottom: 2),
+                          //           child: Text(
+                          //             'Start:${DateFormat("dd-MM-yyyy").format(DateTime.parse(resultModel?.data!.lotteries[index].date.toString() ?? ""))}',
+                          //             style: const TextStyle(
+                          //                 fontSize: 12,
+                          //                 fontWeight: FontWeight.w500),
+                          //           ),
+                          //         )),
+                          //   ],
+                          // ),
                           //Spacer(),
-                          Column(
-                            children: [
-                              Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: AppColors.appbar,
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        AppColors.primary.withOpacity(.9),
-                                        AppColors.primary.withOpacity(.6),
-                                      ],
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 6,
-                                        right: 6,
-                                        top: 2,
-                                        bottom: 2),
-                                    child: Text(
-                                      'Complete',
-                                      style: TextStyle(
-                                          color: AppColors.whit,
-                                          fontSize: 12),
-                                    ),
-                                  )),
-                              SizedBox(
-                                height: 20,
-                              ),
-                            ],
-                          ),
+                          // Column(
+                          //   children: [
+                          //     Container(
+                          //         decoration: BoxDecoration(
+                          //           borderRadius: BorderRadius.circular(5),
+                          //           color: AppColors.appbar,
+                          //           gradient: LinearGradient(
+                          //             colors: [
+                          //               AppColors.primary.withOpacity(.9),
+                          //               AppColors.primary.withOpacity(.6),
+                          //             ],
+                          //             begin: Alignment.topLeft,
+                          //             end: Alignment.bottomRight,
+                          //           ),
+                          //         ),
+                          //         child: Padding(
+                          //           padding: const EdgeInsets.only(
+                          //               left: 6,
+                          //               right: 6,
+                          //               top: 2,
+                          //               bottom: 2),
+                          //           child: Text(
+                          //             'Complete',
+                          //             style: TextStyle(
+                          //                 color: AppColors.whit,
+                          //                 fontSize: 12),
+                          //           ),
+                          //         )),
+                          //     SizedBox(
+                          //       height: 20,
+                          //     ),
+                          //   ],
+                          // ),
                           //    Spacer(),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: AppColors.buttonColor),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 6, right: 6, top: 2, bottom: 2),
-                                  child: Text(
-                                    'End:${resultModel?.data!.lotteries[index].closeTime ?? ""}',
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 5),
-                              Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: AppColors.buttonColor),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 6, right: 6, top: 2, bottom: 2),
-                                  child: Text(
-                                    'End:${DateFormat('dd-MM-yyyy').format(DateTime.parse(resultModel?.data!.lotteries[index].endDate.toString() ?? "")) }',
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )
+                          // Column(
+                          //   crossAxisAlignment: CrossAxisAlignment.end,
+                          //   children: [
+                          //     Container(
+                          //       decoration: BoxDecoration(
+                          //           borderRadius: BorderRadius.circular(5),
+                          //           color: AppColors.buttonColor),
+                          //       child: Padding(
+                          //         padding: const EdgeInsets.only(
+                          //             left: 6, right: 6, top: 2, bottom: 2),
+                          //         child: Text(
+                          //           'End:${resultModel?.data!.lotteries[index].closeTime ?? ""}',
+                          //           style: TextStyle(
+                          //               fontSize: 12,
+                          //               fontWeight: FontWeight.w500),
+                          //         ),
+                          //       ),
+                          //     ),
+                          //     SizedBox(height: 5),
+                          //     Container(
+                          //       decoration: BoxDecoration(
+                          //           borderRadius: BorderRadius.circular(5),
+                          //           color: AppColors.buttonColor),
+                          //       child: Padding(
+                          //         padding: const EdgeInsets.only(
+                          //             left: 6, right: 6, top: 2, bottom: 2),
+                          //         child: Text(
+                          //           'End:${DateFormat('dd-MM-yyyy').format(DateTime.parse(resultModel?.data!.lotteries[index].endDate.toString() ?? "")) }',
+                          //           style: TextStyle(
+                          //               fontSize: 12,
+                          //               fontWeight: FontWeight.w500),
+                          //         ),
+                          //       ),
+                          //     ),
+                          //   ],
+                          // )
                         ],
                       ),
                     ),

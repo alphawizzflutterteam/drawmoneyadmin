@@ -84,9 +84,9 @@ class Lottery {
   final String? resultStatus;
   final String? marketStatus;
   final String? marketOffDay;
-  final String? date;
-  final String? endDate;
-  final String? resultDate;
+  final DateTime? date;
+  final DateTime? endDate;
+  final DateTime? resultDate;
   final String? resultTime;
   final String? ticketPrice;
   final String? image;
@@ -106,7 +106,7 @@ class Lottery {
   final String? lotteryNumbers;
   final List<WinningPositionHistory> winningPositionHistory;
   final String? purchasedLottery;
-  final List<dynamic> winners;
+  final List<Winner> winners;
 
   factory Lottery.fromJson(Map<String, dynamic> json){
     return Lottery(
@@ -120,9 +120,9 @@ class Lottery {
       resultStatus: json["result_status"],
       marketStatus: json["market_status"],
       marketOffDay: json["market_off_day"],
-      date: json["date"] ?? "",
-      endDate:json["end_date"] ?? "",
-      resultDate: json["result_date"] ?? "",
+      date: DateTime.tryParse(json["date"] ?? ""),
+      endDate: DateTime.tryParse(json["end_date"] ?? ""),
+      resultDate: DateTime.tryParse(json["result_date"] ?? ""),
       resultTime: json["result_time"],
       ticketPrice: json["ticket_price"],
       image: json["image"],
@@ -142,7 +142,37 @@ class Lottery {
       lotteryNumbers: json["lottery_numbers"],
       winningPositionHistory: json["winning_position_history"] == null ? [] : List<WinningPositionHistory>.from(json["winning_position_history"]!.map((x) => WinningPositionHistory.fromJson(x))),
       purchasedLottery: json["purchased_lottery"],
-      winners: json["winners"] == null ? [] : List<dynamic>.from(json["winners"]!.map((x) => x)),
+      winners: json["winners"] == null ? [] : List<Winner>.from(json["winners"]!.map((x) => Winner.fromJson(x))),
+    );
+  }
+
+}
+
+class Winner {
+  Winner({
+    required this.userId,
+    required this.userName,
+    required this.mobile,
+    required this.lotteryNumber,
+    required this.winnerPrice,
+    required this.winPosition,
+  });
+
+  final String? userId;
+  final String? userName;
+  final String? mobile;
+  final String? lotteryNumber;
+  final String? winnerPrice;
+  final String? winPosition;
+
+  factory Winner.fromJson(Map<String, dynamic> json){
+    return Winner(
+      userId: json["user_id"],
+      userName: json["user_name"],
+      mobile: json["mobile"],
+      lotteryNumber: json["lottery_number"],
+      winnerPrice: json["winner_price"],
+      winPosition: json["win_position"],
     );
   }
 

@@ -146,8 +146,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                        seePassword
                                            ? Icons.visibility_off
                                            : Icons.visibility,
-                                       color: AppColors.primary,
-                                       size: 16,
+                                       color: Colors.grey,
+                                       size: 25,
                                      ),
                                        onPressed: () {
                                          setState(() {
@@ -208,14 +208,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                 child: Padding(
                                   padding: const EdgeInsets.only(left: 22,right: 22),
                                   child: Container(
-                                    height: 30,
+                                    height: 50,
                                   //  width: 100,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       color: AppColors.buttonColor
 
                                     ),
-                                    child: Center(child: Text("Login",style: TextStyle(color: AppColors.whit),)),
+                                    child: Center(child: Text("Login",style: TextStyle(color: AppColors.whit,fontWeight: FontWeight.bold,fontSize: 18),)),
                                   ),
                                 ),
                               )
